@@ -3,21 +3,35 @@ var oSubordinateDetails = {};
 var sGroup;
 var oResults={};
 $(document).ready(function(){
+
 	//Extracting the logged in user data from master data
 	var sCurrentEmployee = _spPageContextInfo.userLoginName.substring( _spPageContextInfo.userLoginName.indexOf('\\') + 1);
 	//apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Master%20Data')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	
-	if (checkUserGroup("EAS Heads Group") == false) //
+	if (checkUserGroup("EAS Heads Group") == false)
 	{
 		$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 		$("textarea[title='Accepting Officer Comment']").closest('tr').hide();	
+		(function () {
+			var overrideContext = {};
+			overrideContext.Templates = overrideContext.Templates || {};
+			overrideContext.Templates.OnPreRender = function(ctx) {
+				var statusField = ctx.ListSchema.Field.filter(function(f) {
+					return f.Name === 'Accepting_x0020_Officer_x0020_Co';
+				});
+				if (statusField) {
+					statusField[0].AllowGridEditing = false;
+				}
+			}
+			SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrideContext);
+		})();
 	}
-	if(window.location.href.indexOf("EditForm") === -1 )
+	if(window.location.href.indexOf("EditForm") === -1 && window.location.href.indexOf("MyItems") === -1) //If the form  is not in edit mode or Quick Edit mode
 	{
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 	}
-	else
+	else if(window.location.href.indexOf("EditForm") !== -1 && window.location.href.indexOf("MyItems") === -1) //Disable the input field when in Edit Form mode
 	{
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
 		disablePeoplePicker(); // disbaling the poeple picker 
