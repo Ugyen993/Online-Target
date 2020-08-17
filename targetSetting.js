@@ -46,7 +46,7 @@ function getEmployeeDetails(data){
 			}
 			else {
 				alert("Couldnt find entry in the master data. Please contact Employee Performance Divison,CO");
-				window.location.href = "/HRAD/";
+				window.location.href = "/HRAD/Target/Lists/Project%20Tasks/MyItems.aspx";
 			}
 		}
 	}
