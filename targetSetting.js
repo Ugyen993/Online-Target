@@ -13,8 +13,11 @@ $(document).ready(function(){
 		$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 		$("textarea[title='Accepting Officer Comment']").closest('tr').hide();	
 	}
-   
-	GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+	if(window.location.href.indexOf("EditForm") === -1 )
+	{
+		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+	}
+	
 	});
 
 function GetListItems(apiPath, success) {     
