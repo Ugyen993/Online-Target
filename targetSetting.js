@@ -17,7 +17,7 @@ $(document).ready(function(){
 	GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 	});
 
-function GetListItem(apiPath, success) {     
+function GetListItems(apiPath, success) {     
 	$.ajax({  
 		url: apiPath,  
 		headers: {
