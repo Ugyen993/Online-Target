@@ -17,6 +17,11 @@ $(document).ready(function(){
 	{
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 	}
+	else
+	{
+		$("input[title*= 'Select Subordinate']").prop('disabled', true);
+		disablePeoplePicker(); // disbaling the poeple picker 
+	}
 	
 	});
 
@@ -121,8 +126,20 @@ function setPerson(obj){
 			})
 		}
 		peoplepicker.AddUserKeys(subordinateID); // finally set the loginName as the people picker value, this also triggers a validation.
-		
-		/*** Making the people picker read only ****/
+				
+		disablePeoplePicker(); //Disbaling the people picker
+
+		// // Populating the subordinate's detail
+		$("input[id='Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").val(oSubordinateDetails.EmployeeNumber);
+		$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
+
+		}
+	}
+}
+
+function disablePeoplePicker()
+{
+/*** Making the people picker read only ****/
 		//hide x image
 		$(".sp-peoplepicker-delImage").hide();
 		//disable peoplepicker control
@@ -130,13 +147,7 @@ function setPerson(obj){
 		//set disable css style
 		$("div.sp-peoplepicker-topLevel[title='Assigned To']").addClass("sp-peoplepicker-topLevelDisabled");
 		/**** END of making people picker read only**/
-		
-		// // Populating the subordinate's detail
-		$("input[id='Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").val(oSubordinateDetails.EmployeeNumber);
-		$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
 
-		}
-	}
 }
 function getSubordinateDetails(data){
 	if (data != null) {  
