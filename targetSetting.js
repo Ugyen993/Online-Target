@@ -10,10 +10,7 @@ $(document).ready(function(){
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	
 	if (checkUserGroup("EAS Heads Group") == false)
-	{
-		$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
-		$("textarea[title='Accepting Officer Comment']").closest('tr').hide();	
-		(function () {
+		{(function () {
 			var overrideContext = {};
 			overrideContext.Templates = overrideContext.Templates || {};
 			overrideContext.Templates.OnPreRender = function(ctx) {
@@ -34,14 +31,27 @@ $(document).ready(function(){
 			SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrideContext);
 		})();
 	}
-	if(window.location.href.indexOf("EditForm") === -1 && window.location.href.indexOf("MyItems") === -1) //If the form  is not in edit mode or Quick Edit mode
+	
+	if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
 	{
+		
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 	}
-	else if(window.location.href.indexOf("EditForm") !== -1 && window.location.href.indexOf("MyItems") === -1) //Disable the input field when in Edit Form mode
+	else if(window.location.href.indexOf("EditForm") !== -1 ) //If the form is Eidt  Form run the code 
 	{
+		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
 		disablePeoplePicker(); // disbaling the poeple picker 
+		if(checkUserGroup("EAS Heads Group") === false)
+		{
+			$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+		    $("textarea[title='Accepting Officer Comment']").closest('tr').hide();
+		}
+		else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+		{
+			$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
+		    $("textarea[title='Subordinate Comment']").closest('tr').hide();
+		}
 	}
 	
 	});
@@ -70,7 +80,7 @@ function getEmployeeDetails(data){
 			oEmployeesDetails = items.results[0]; 
 			if(oEmployeesDetails){
 				setFields();
-				var sLoadVal = $("input[title*= 'Provide feedback to']").val();
+				var sLoadVal = $("input[title*= 'Select Subordinate']").val();
 				setDropdown(sLoadVal);
 			}
 			else {
@@ -208,6 +218,9 @@ function checkUserGroup(groupName) {
     })
     return result;
   }
+function checkUser(){
+
+}
 
 
                         
