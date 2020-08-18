@@ -38,7 +38,7 @@ $(document).ready(function(){
 	else if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
 	{
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
-		$("input[title*= 'Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").prop('disabled', true);
+		$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 		
 	}
@@ -60,7 +60,7 @@ $(document).ready(function(){
 		}
 		else if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
 		{
-			$("input[title*= 'Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").val(sCurrentEmployee.Designation);
+			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(sCurrentEmployee.Designation);
 		}
 
 	}
@@ -174,7 +174,7 @@ function setPerson(obj){
 		disablePeoplePicker(); //Disbaling the people picker
 
 		// // Populating the subordinate's EID
-		$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(subordinateEID);
+		$("input[id='Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").val(subordinateEID);
 
 		}
 	}
