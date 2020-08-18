@@ -6,6 +6,7 @@ $(document).ready(function(){
 
 	//Extracting the logged in user data from master data
 	var sCurrentEmployee = _spPageContextInfo.userLoginName.substring( _spPageContextInfo.userLoginName.indexOf('\\') + 1);
+	//var sCurrentEID = _spPageContextInfo.userLoginName.match(/\d+/g)[0];
 	//apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Master%20Data')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	
@@ -37,7 +38,9 @@ $(document).ready(function(){
 	else if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
 	{
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
+		$("input[title*= 'Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").prop('disabled', true);
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+		
 	}
 	else if(window.location.href.indexOf("EditForm") !== -1 && window.location.href.indexOf("MyItems") !== -1) //If the form is Eidt  Form run the code 
 	{
@@ -55,6 +58,11 @@ $(document).ready(function(){
 			$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
 		    $("textarea[title='Subordinate Comment']").closest('tr').hide();
 		}
+		else if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
+		{
+			$("input[title*= 'Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").val(sCurrentEmployee.Designation);
+		}
+
 	}
 	
 	});
@@ -143,10 +151,12 @@ function setPerson(obj){
 		//Getting the selected user 
 		var selectedOption = drpOption.options[ drpOption.selectedIndex ].value;
 		var subordinateID = selectedOption.split(':')[1];
+		var subordinateEID = selectedOption.split('(')[0]
+
 
 		//Getting the selected subordinate details from Master Data by RESTful API
-		apiPath2 = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + subordinateID + "'";
-		GetListItems(apiPath2, getSubordinateDetails);
+		// apiPath2 = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + subordinateID + "'";
+		// GetListItems(apiPath2, getSubordinateDetails);
 		
 		// peoplePickerObject.AddUserKeys(subordinateID);
 		var form = jQuery("table[class='ms-formtable']"); // get the form element
@@ -163,9 +173,8 @@ function setPerson(obj){
 				
 		disablePeoplePicker(); //Disbaling the people picker
 
-		// // Populating the subordinate's detail
-		$("input[id='Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").val(oSubordinateDetails.EmployeeNumber);
-		$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
+		// // Populating the subordinate's EID
+		$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(subordinateEID);
 
 		}
 	}
@@ -183,20 +192,18 @@ function disablePeoplePicker()
 		/**** END of making people picker read only**/
 
 }
-function getSubordinateDetails(data){
-	if (data != null) {  
-		items = data.d;  
-		if (items != null) {  
-			oSubordinateDetails = items.results[0]; 
-		}
-		else
-		{
-			alert("Couldnt find entry for subordinate in the master data. Please contact Employee Performance Divison,CO");
-		}
-	}
-
-
-}
+// function getSubordinateDetails(data){
+// 	if (data != null) {  
+// 		items = data.d;  
+// 		if (items != null) {  
+// 			oSubordinateDetails = items.results[0]; 
+// 		}
+// 		else
+// 		{
+// 			alert("Couldnt find entry for subordinate in the master data. Please contact Employee Performance Divison,CO");
+// 		}
+// 	}
+// }
 function checkUserGroup(groupName) {
 
     var result = false;
