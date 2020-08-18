@@ -60,7 +60,9 @@ $(document).ready(function(){
 		}
 		else if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
 		{
-			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(sCurrentEmployee.Designation);
+			GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oEmployeesDetails.Designation);
+			$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
 		}
 
 	}
