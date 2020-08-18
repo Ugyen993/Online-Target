@@ -17,12 +17,19 @@ $(document).ready(function(){
 			var overrideContext = {};
 			overrideContext.Templates = overrideContext.Templates || {};
 			overrideContext.Templates.OnPreRender = function(ctx) {
-				var statusField = ctx.ListSchema.Field.filter(function(f) {
-					return f.Name === 'Accepting_x0020_Officer_x0020_Co';
+				
+				var disbleField = ['Office','Accepting_x0020_Officer_x0020_Co'];
+				
+				disbleField.forEach(function(item){
+					var statusField = ctx.ListSchema.Field.filter(function(f) { //disbale field on quick edit mode
+						return f.Name === item;
+					});
+					if (statusField) {
+						statusField[0].AllowGridEditing = false;
+					}
+
 				});
-				if (statusField) {
-					statusField[0].AllowGridEditing = false;
-				}
+				
 			}
 			SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrideContext);
 		})();
