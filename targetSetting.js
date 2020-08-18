@@ -45,6 +45,7 @@ $(document).ready(function(){
 	else if(window.location.href.indexOf("EditForm") !== -1 && window.location.href.indexOf("MyItems") !== -1) //If the form is Eidt  Form run the code 
 	{
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
+		$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
 		disablePeoplePicker(); // disbaling the poeple picker 
@@ -62,7 +63,6 @@ $(document).ready(function(){
 		{
 			GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oEmployeesDetails.Designation);
-			$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
 		}
 
 	}
