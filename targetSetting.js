@@ -9,7 +9,9 @@ $(document).ready(function(){
 	//apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Master%20Data')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	
-	if (checkUserGroup("EAS Heads Group") == false)
+	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
+	{
+		if (checkUserGroup("EAS Heads Group") == false)
 		{(function () {
 			var overrideContext = {};
 			overrideContext.Templates = overrideContext.Templates || {};
@@ -30,15 +32,16 @@ $(document).ready(function(){
 			}
 			SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrideContext);
 		})();
+		}
 	}
-	
-	if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
+	else if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
 	{
-		
+		$('#sideNavBoxCustom').hide(); // Hide Top Menu
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 	}
-	else if(window.location.href.indexOf("EditForm") !== -1 ) //If the form is Eidt  Form run the code 
+	else if(window.location.href.indexOf("EditForm") !== -1 && window.location.href.indexOf("MyItems") !== -1) //If the form is Eidt  Form run the code 
 	{
+		$('#sideNavBoxCustom').hide(); // Hide Top Menu
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
 		disablePeoplePicker(); // disbaling the poeple picker 
