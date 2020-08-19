@@ -49,10 +49,8 @@ $(document).ready(function(){
 	}
 	else if(window.location.href.indexOf("EditForm") !== -1 && window.location.href.indexOf("MyItems") !== -1) //If the form is Eidt  Form run the code 
 	{
-		$('#sideNavBoxCustom').hide(); // Hide Top Menu
-		$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
-		
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
+		hideFields();
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
 		disablePeoplePicker(); // disbaling the poeple picker 
 		
@@ -83,6 +81,24 @@ $(document).ready(function(){
 	}
 	
 	});
+function hideFields(){
+	$('#sideNavBoxCustom').hide(); // Hide Top Menu
+	$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
+	$("input[id='Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").prop('disabled', true);
+	$("input[title='Evaluation Unit(TAS-Bonus group)']").prop('disabled', true);
+	$("input[title='Plant']").prop('disabled', true);
+	$("input[title='Targets Required Field']").prop('disabled', true);
+	$("input[title='Target Breakdown']").prop('disabled', true);
+	$("select[title='Task Status']").prop('disabled', true);
+	$("input[title='Start Date']").prop('disabled', true);
+	$("input[title='Finish Date']").prop('disabled', true);
+	$("input[title='Target Weightage Required Field']").prop('disabled', true);
+	$("input[title='Target Achievement']").prop('disabled', true);
+	$("input[title='Training Need Assessment (TNA)']").prop('disabled', true);
+	$("input[title='Performance Improvement Plant (PIP)']").prop('disabled', true);
+	$("input[title='Special Achievement']").prop('disabled', true);
+	$("input[title='Impediment to performance']").prop('disabled', true);
+}
 
 function GetListItems(apiPath, success) {     
 	$.ajax({  
