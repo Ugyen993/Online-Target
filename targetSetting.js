@@ -18,7 +18,7 @@ $(document).ready(function(){
 			overrideContext.Templates = overrideContext.Templates || {};
 			overrideContext.Templates.OnPreRender = function(ctx) {
 				
-				var disbleField = ['Office','Accepting_x0020_Officer_x0020_Co'];
+				var disbleField = ['Office','Accepting_x0020_Officer_x0020_Co']; //var disbleField = ['AssignedTo','StartDate','DueDate','Status','Accepting_x0020_Officer','Target_x0020_Weightage','Target_x0020_Achievement','Office','Accepting_x0020_Officer_x0020_Co'];
 				
 				disbleField.forEach(function(item){
 					var statusField = ctx.ListSchema.Field.filter(function(f) { //disbale field on quick edit mode
