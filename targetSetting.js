@@ -76,8 +76,8 @@ $(document).ready(function(){
 		}
 		else if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
 		{
-			GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
-			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oEmployeesDetails.Designation);
+			GetListItems(apiPath, getSubordinateDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
 		}
 
 	}
@@ -118,6 +118,17 @@ function getEmployeeDetails(data){
 		}
 	}
 }
+function getSubordinateDetails(data){
+	if (data != null) {  
+		items = data.d;  
+		if (items != null)   
+			oSubordinateDetails = items.results[0]; 
+		}
+		else
+		{
+			alert("Couldnt find entry for subordinate in the master data. Please contact Employee Performance Divison,CO");
+		}
+	}
 function setFields(){
 
 	// Populating the office and plant detail
@@ -209,18 +220,6 @@ function disablePeoplePicker()
 		/**** END of making people picker read only**/
 
 }
-// function getSubordinateDetails(data){
-// 	if (data != null) {  
-// 		items = data.d;  
-// 		if (items != null) {  
-// 			oSubordinateDetails = items.results[0]; 
-// 		}
-// 		else
-// 		{
-// 			alert("Couldnt find entry for subordinate in the master data. Please contact Employee Performance Divison,CO");
-// 		}
-// 	}
-// }
 function checkUserGroup(groupName) {
 
     var result = false;
