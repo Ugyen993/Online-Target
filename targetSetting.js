@@ -38,7 +38,12 @@ $(document).ready(function(){
 	else if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
 	{
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
+		$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
+	    $("textarea[title='Subordinate Comment']").closest('tr').hide();
+		$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+		$("textarea[title='Accepting Officer Comment']").closest('tr').hide();
 		$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
+		
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 		
 	}
@@ -46,15 +51,25 @@ $(document).ready(function(){
 	{
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
 		$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
+		
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
 		disablePeoplePicker(); // disbaling the poeple picker 
-		if(checkUserGroup("EAS Heads Group") === false)
+		
+		if(checkUserGroup("EAS Heads Group") === false) // Hide the accepting officer fields if not in  EAS head Group
 		{
 			$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 		    $("textarea[title='Accepting Officer Comment']").closest('tr').hide();
 		}
-		else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+		else if(checkUserGroup("EAS Heads Group") !== fasle) // Hide the accepting officer fields if the user is in EAS head Group and if the target is assigned to this user
+		{
+			if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+			{
+			$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+		    $("textarea[title='Accepting Officer Comment']").closest('tr').hide();
+			}	
+		}
+		if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 		{
 			$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
 		    $("textarea[title='Subordinate Comment']").closest('tr').hide();
