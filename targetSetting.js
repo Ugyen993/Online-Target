@@ -10,12 +10,8 @@ $(document).ready(function(){
 	//apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Master%20Data')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	
-	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("DispForm") === -1 && window.location.href.indexOf("EditForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
-	{
-		$('#sideNavBoxCustom').hide(); // Hide Top Menu
-		$(".ms-recommendations-panel").hide() // Hide the see also field
-	}
-	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
+	
+	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1 && window.location.href.indexOf("DispForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
 	{
 		if (checkUserGroup("EAS Heads Group") == false)
 		{(function () {
@@ -52,7 +48,7 @@ $(document).ready(function(){
 		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
 		
 	}
-	else if(window.location.href.indexOf("EditForm") !== -1 && window.location.href.indexOf("MyItems") !== -1) //If the form is Eidt  Form run the code 
+	else if(window.location.href.indexOf("EditForm") !== -1 ) //If the form is Eidt  Form run the code 
 	{
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
 		hideFields();
@@ -83,6 +79,11 @@ $(document).ready(function(){
 			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
 		}
 
+	}
+	else if(window.location.href.indexOf("DispForm") !== -1 )//Run the code when in Dsip mode and disbale the subordiante and acepting officer fields based on user type 
+	{
+		$('#sideNavBoxCustom').hide(); // Hide Top Menu
+		$(".ms-recommendations-panel").hide() // Hide the see also field
 	}
 	
 	});
