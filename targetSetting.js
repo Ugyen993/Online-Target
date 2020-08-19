@@ -88,16 +88,16 @@ function hideFields(){
 	$("input[title='Evaluation Unit(TAS-Bonus group)']").prop('disabled', true);
 	$("input[title='Plant']").prop('disabled', true);
 	$("input[title='Targets Required Field']").prop('disabled', true);
-	$("input[title='Target Breakdown']").prop('disabled', true);
+	$("textarea[title='Target Breakdown']").prop('disabled', true);
 	$("select[title='Task Status']").prop('disabled', true);
 	$("input[title='Start Date']").prop('disabled', true);
 	$("input[title='Finish Date']").prop('disabled', true);
 	$("input[title='Target Weightage Required Field']").prop('disabled', true);
 	$("input[title='Target Achievement']").prop('disabled', true);
-	$("input[title='Training Need Assessment (TNA)']").prop('disabled', true);
-	$("input[title='Performance Improvement Plant (PIP)']").prop('disabled', true);
-	$("input[title='Special Achievement']").prop('disabled', true);
-	$("input[title='Impediment to performance']").prop('disabled', true);
+	$("textarea[title='Training Need Assessment (TNA)']").prop('disabled', true);
+	$("textarea[title='Performance Improvement Plant (PIP)']").prop('disabled', true);
+	$("textarea[title='Special Achievement']").prop('disabled', true);
+	$("textarea[title='Impediment to performance']").prop('disabled', true);
 }
 
 function GetListItems(apiPath, success) {     
