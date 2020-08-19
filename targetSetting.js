@@ -12,6 +12,11 @@ $(document).ready(function(){
 	
 	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
 	{
+		$('#sideNavBoxCustom').hide(); // Hide Top Menu
+		$(".ms-recommendations-panel").hide() // Hide the see also field
+	}
+	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
+	{
 		if (checkUserGroup("EAS Heads Group") == false)
 		{(function () {
 			var overrideContext = {};
