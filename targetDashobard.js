@@ -1,16 +1,15 @@
-ExecuteOrDelayUntilScriptLoaded(initializePage, "sp.js");   
+ 
 function initializePage() { 
 	if("Edit" !== document.forms[MSOWebPartPageFormName]._wikiPageMode.value){
 	    // This code runs when the DOM is ready and creates a context object which is needed to use the SharePoint object model  
         var userId = _spPageContextInfo.userId;
         var assignedEID = _spPageContextInfo.userLoginName.substring(_spPageContextInfo.userLoginName.indexOf('\\') + 1).match(/\d+/)[0];
-		var apiPath = _spPageContextInfo.webAbsoluteUrl +  apiPath  + "/_api/Lists/getbytitle('Employee Target')/Items?$filter=((AuthorId eq " + userId + ") or (Subordinate_x0027_s_x0020_EID eq"+ assignedEID +"))" ;  
+		var apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/Lists/getbytitle('Employee Target')/Items?$filter=((AuthorId eq " + userId + ") or (Subordinate_x0027_s_x0020_EID eq "+ assignedEID +"))" ;  
         
-        http://disc:5000/HRAD/Target/_api/Web/Lists/getbytitle('Employee%20Target')/Items?$filter=((AuthorId%20eq%2042)%20or%20(AssignedToId%20eq%2042))
+        //http://disc:5000/HRAD/Target/_api/Web/Lists/getbytitle('Employee%20Target')/Items?$filter=((AuthorId%20eq%2042)%20or%20(AssignedToId%20eq%2042))
         // apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/Web/Lists/getbytitle('Project Tasks')/Items?$filter=((AuthorId eq " + userId + ") or (AssignedTo eq" + userId+ "))";
         GetListItems(apiPath, updateNewsItems);
 	    
-	    fixCalendar();
     }		
     function updateNewsItems(data){
 		var items; // Data will have user object  
@@ -58,6 +57,7 @@ function isMobileDevice() {
 }
 
 $(document).ready(function(){
+	ExecuteOrDelayUntilScriptLoaded(initializePage, "sp.js");  
 	if (isMobileDevice()){
 		var setWidth = $("#contentRow").width();
 		setWidth = setWidth - 20;
