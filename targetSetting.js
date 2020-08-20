@@ -51,14 +51,18 @@ $(document).ready(function(){
 	else if(window.location.href.indexOf("EditForm") !== -1 ) //If the form is Eidt  Form run the code 
 	{
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
-		hideFields();
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
 		disablePeoplePicker(); // disbaling the poeple picker 
 		
 		if(checkUserGroup("EAS Heads Group") === false) // Hide the accepting officer fields if not in  EAS head Group
 		{
+			
 			$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
-		    $("textarea[title='Accepting Officer Comment']").closest('tr').hide();
+			$("textarea[title='Accepting Officer Comment']").closest('tr').hide();
+		}
+		else if(checkUserGroup("EAS Heads Group") === false && sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+		{
+			hideFields();
 		}
 		else if(checkUserGroup("EAS Heads Group") !== fasle) // Hide the accepting officer fields if the user is in EAS head Group and if the target is assigned to this user
 		{
@@ -72,6 +76,10 @@ $(document).ready(function(){
 		{
 			$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
 		    $("textarea[title='Subordinate Comment']").closest('tr').hide();
+		}
+		if(sCurrentEmployee === (selectFieldValue.split(':')[1]))
+		{
+			hideFields();
 		}
 		else if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
 		{
@@ -89,6 +97,8 @@ $(document).ready(function(){
 	});
 function hideFields(){
 	$('#sideNavBoxCustom').hide(); // Hide Top Menu
+	$("img[id='StartDate_64cd368d-2f95-4bfc-a1f9-8d4324ecb007_$DateTimeFieldDateDatePickerImage']").hide()
+	$("img[id='DueDate_cd21b4c2-6841-4f9e-a23a-738a65f99889_$DateTimeFieldDateDatePickerImage']").hide()
 	$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
 	$("input[id='Subordinate_x0027_s_x0020_EID_3d17e8f4-63ee-414f-afa3-814e46e0c5e6_$NumberField']").prop('disabled', true);
 	$("input[title='Evaluation Unit(TAS-Bonus group)']").prop('disabled', true);
