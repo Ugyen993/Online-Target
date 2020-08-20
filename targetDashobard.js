@@ -15,19 +15,22 @@ function initializePage() {
     function updateNewsItems(data){
 		var items; // Data will have user object  
 		var results; 
-		var newsBlockHTML = '';
+		var upcomingTaskBlockHTML = '';
 		if (data != null) {  
 			items = data.d;  
 			if (items != null) {  
 				results = items.results;  
 				for (var i = 0; i < results.length; i++) {
-					newsBlockHTML = '<div class="row newsBlock"><div class="col-md-3 hidden-xs"><img src="$imgsrc$" class="img-responsive" style="height:105px;width:153px;"></div><div class="col-md-8 col-xs-12"><div class="news-title"><a href="$newsurl$"><h5 class="newsTitleHead" title="newstitle">newstitle</h5></a></div><div class="news-cats"><ul class="list-unstyled list-inline mb-1"><li class="list-inline-item"><i class="fa fa-calendar text-danger"></i><small>$publisheddate$</small></li></ul></div><div class="news-content"><p>$newsshortdesc$</p></div></div></div>';
-					newsBlockHTML = newsBlockHTML.replace("$newsurl$", _spPageContextInfo.siteAbsoluteUrl + "/Lists/News%20and%20Events/DispForm.aspx?ID=" + results[i].ID);
-					newsBlockHTML = results[i].Image ? newsBlockHTML.replace("$imgsrc$", results[i].Image.Url) : newsBlockHTML.replace("$imgsrc$","");
-					newsBlockHTML = newsBlockHTML.replace(/newstitle/g, results[i].Title);
-					newsBlockHTML = results[i].PublishedDate ? newsBlockHTML.replace("$publisheddate$", new Date(results[i].PublishedDate).format("dd MMM, yyyy")) : newsBlockHTML.replace("$publisheddate$","");
-					newsBlockHTML = results[i].ShortDescription? newsBlockHTML.replace("$newsshortdesc$", results[i].ShortDescription) : newsBlockHTML.replace("$newsshortdesc$", "");
-					$("#companyNews .card-body").append(newsBlockHTML);
+
+				upcomingTaskBlockHTML =	'<tr><td><div class="form-check"> <label class="form-check-label"> <input class="form-check-input" type="checkbox" value=""> <span class="form-check-sign"> <span class="check"></span>  </span> </label></div> </td> <td>  <p class="title">$targetDescription$</p> <p class="text-muted"><small>Due Date : $duedate$</small></p>  </td><td class="td-actions text-right"> <button type="button" rel="tooltip" title="" class="btn btn-link" data-original-title="Edit Task"><a href="$targeturl$"><i class="tim-icons icon-pencil"></i> </a></button>  </td> </tr>';
+					//upcomingTaskBlockHTML = '<div class="row newsBlock"><div class="col-md-3 hidden-xs"><img src="$imgsrc$" class="img-responsive" style="height:105px;width:153px;"></div><div class="col-md-8 col-xs-12"><div class="news-title"><a href="$targeturl$"><h5 class="newsTitleHead" title="newstitle">newstitle</h5></a></div><div class="news-cats"><ul class="list-unstyled list-inline mb-1"><li class="list-inline-item"><i class="fa fa-calendar text-danger"></i><small>$duedate$</small></li></ul></div><div class="news-content"><p>$targetDescription$</p></div></div></div>';
+					upcomingTaskBlockHTML = upcomingTaskBlockHTML.replace("$targeturl$", _spPageContextInfo.siteAbsoluteUrl + "/Lists/Project%20Tasks/DispForm.aspx?ID=" + results[i].ID);
+					//upcomingTaskBlockHTML = results[i].Image ? upcomingTaskBlockHTML.replace("$imgsrc$", results[i].Image.Url) : upcomingTaskBlockHTML.replace("$imgsrc$","");
+					//upcomingTaskBlockHTML = upcomingTaskBlockHTML.replace(/newstitle/g, results[i].Title);
+					upcomingTaskBlockHTML = results[i].DueDate ? upcomingTaskBlockHTML.replace("$duedate$", new Date(results[i].DueDate).format("dd MMM, yyyy")) : upcomingTaskBlockHTML.replace("$duedate$","");
+					upcomingTaskBlockHTML = results[i].Title? upcomingTaskBlockHTML.replace("$targetDescription$", results[i].Title) : upcomingTaskBlockHTML.replace("$targetDescription$", "");
+                   // $("#companyNews .card-body").append(upcomingTaskBlockHTML);
+                    $("#upcomingTarget .upcomingTaskBody").append(upcomingTaskBlockHTML);
 				}
 			} 
 		}  
