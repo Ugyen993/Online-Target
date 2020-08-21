@@ -66,6 +66,7 @@ $(document).ready(function(){
 		}
 		else if(checkUserGroup("EAS Heads Group") !== fasle) // Hide the accepting officer fields if the user is in EAS head Group and if the target is assigned to this user
 		{
+			$('#sideNavBoxCustom').hide(); // Hide Top Menu
 			if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 			{
 			$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
@@ -74,6 +75,7 @@ $(document).ready(function(){
 		}
 		if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 		{
+			$('#sideNavBoxCustom').hide(); // Hide Top Menu
 			$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
 		    $("textarea[title='Subordinate Comment']").closest('tr').hide();
 		}
@@ -84,6 +86,7 @@ $(document).ready(function(){
 		else if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
 		{
 			GetListItems(apiPath, getSubordinateDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+			$('#sideNavBoxCustom').hide(); // Hide Top Menu
 			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
 		}
 
@@ -96,7 +99,7 @@ $(document).ready(function(){
 	
 	});
 function hideFields(){
-	$('#sideNavBoxCustom').hide(); // Hide Top Menu
+	
 	$("img[id='StartDate_64cd368d-2f95-4bfc-a1f9-8d4324ecb007_$DateTimeFieldDateDatePickerImage']").hide()
 	$("img[id='DueDate_cd21b4c2-6841-4f9e-a23a-738a65f99889_$DateTimeFieldDateDatePickerImage']").hide()
 	$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
