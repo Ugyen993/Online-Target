@@ -39,9 +39,14 @@ $(document).ready(function(){
 	else if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
 	{
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
-		$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
-	    $("textarea[title='Subordinate Comment']").closest('tr').hide();
-		$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+		$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
+		$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
+		$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
+		$("textarea[title='Subordinate Comment']").closest('tr').hide();
+
+		$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+		$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
+		$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
 		$("textarea[title='Accepting Officer Comment']").closest('tr').hide();
 		$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
 		
@@ -57,8 +62,11 @@ $(document).ready(function(){
 		if(checkUserGroup("EAS Heads Group") === false) // Hide the accepting officer fields if not in  EAS head Group
 		{
 			
-			$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
-			$("textarea[title='Accepting Officer Comment']").closest('tr').hide();
+		$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+		$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
+		$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
+		$("textarea[title='Accepting Officer Comment']").closest('tr').hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+		
 		}
 		else if(checkUserGroup("EAS Heads Group") === false && sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 		{
@@ -69,15 +77,19 @@ $(document).ready(function(){
 			$('#sideNavBoxCustom').hide(); // Hide Top Menu
 			if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 			{
-			$("select[title='Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
-		    $("textarea[title='Accepting Officer Comment']").closest('tr').hide();
+				$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+				$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
+				$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
+				$("textarea[title='Accepting Officer Comment']").closest('tr').hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 			}	
 		}
 		if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 		{
 			$('#sideNavBoxCustom').hide(); // Hide Top Menu
-			$("select[title='Subordinate Approval']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
-		    $("textarea[title='Subordinate Comment']").closest('tr').hide();
+			$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
+			$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
+			$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
+			$("textarea[title='Subordinate Comment']").closest('tr').hide();
 		}
 		if(sCurrentEmployee === (selectFieldValue.split(':')[1]))
 		{
