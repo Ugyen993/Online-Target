@@ -2,6 +2,7 @@ var oEmployeesDetails = {};
 var oSubordinateDetails = {};
 var sGroup;
 var oResults={};
+
 $(document).ready(function(){
 
 	//Extracting the logged in user data from master data
@@ -10,6 +11,7 @@ $(document).ready(function(){
 	//apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Master%20Data')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	
+	$("input[title='Targets Required Field']").on("input", function(){alert("changes")}) //Any chnages to the target field, save the initial data
 	
 	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1 && window.location.href.indexOf("DispForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
 	{
@@ -65,6 +67,7 @@ $(document).ready(function(){
 		$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
 		$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
 		$("textarea[title='Accepting Officer Comment']").closest('tr').hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+			
 			if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
 			{
 			hideFields();
@@ -87,18 +90,32 @@ $(document).ready(function(){
 			$('#sideNavBoxCustom').hide(); // Hide Top Menu
 			if(sCurrentEmployee === (selectFieldValue.split(':')[1]))
 			{
+				hideFields();
 				$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 				$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
 				$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
 				$("textarea[title='Accepting Officer Comment']").closest('tr').hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 			}
-			else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+			else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]) && sCurrentEmployee === getAcceptingOfficer())
 			{
-				$('#sideNavBoxCustom').hide(); // Hide Top Menu
+				hideFields();
 				$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
 				$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
 				$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
 				$("textarea[title='Subordinate Comment']").closest('tr').hide();
+			}
+			else 
+			{
+				$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
+				$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
+				$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
+				$("textarea[title='Subordinate Comment']").closest('tr').hide();
+
+				$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+				$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
+				$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
+				$("textarea[title='Accepting Officer Comment']").closest('tr').hide();
+
 			}	
 		}
 		
@@ -234,9 +251,9 @@ function setPerson(obj){
 		// GetListItems(apiPath2, getSubordinateDetails);
 		
 		// peoplePickerObject.AddUserKeys(subordinateID);
-		var form = jQuery("table[class='ms-formtable']"); // get the form element
-    	var userField = form.find("input[id$='ClientPeoplePicker_EditorInput']").get(0) // find the people picker element, getting the first people pickers on the form 
-    	var peoplepicker = SPClientPeoplePicker.PickerObjectFromSubElement(userField) // Use SPClientPeoplePicker to get the actual picker object
+		var form = jQuery("table[class='ms-formtable']"); // get the form element 
+    	var userField = form.find("input[id$='ClientPeoplePicker_EditorInput']").get(0); // find the people picker element, getting the first people pickers on the form 
+    	var peoplepicker = SPClientPeoplePicker.PickerObjectFromSubElement(userField); // Use SPClientPeoplePicker to get the actual picker object
 		var usersObject = peoplepicker.GetAllUserInfo(); //getting the users in the people picker 
 		if(usersObject != null)
 		{			
@@ -254,6 +271,19 @@ function setPerson(obj){
 		}
 	}
 }
+function getAcceptingOfficer(){
+
+	//Get the people picker field
+    var ppDiv = $("div[title='Accepting Officer']")[0];
+    //cast the object as type PeoplePicker
+    var peoplePicker = SPClientPeoplePicker.SPClientPeoplePickerDict[ppDiv.id];
+ 
+    //Get list of users from field (assuming 1 in this case)
+    var userList = peoplePicker.GetAllUserInfo();
+	var userInfo = userList[0];
+	var acceptingOfficer = userInfo.EntityData.AccountName.substring(userInfo.EntityData.AccountName.indexOf('\\')+1);
+	return acceptingOfficer;
+}
 
 function disablePeoplePicker()
 {
@@ -264,12 +294,15 @@ function disablePeoplePicker()
 		$("input.sp-peoplepicker-editorInput[title='Assigned To']").prop('disabled', true);
 		//set disable css style
 		$("div.sp-peoplepicker-topLevel[title='Assigned To']").addClass("sp-peoplepicker-topLevelDisabled");
-		
-		//disable peoplepicker control
+
+		if(window.location.href.indexOf("NewForm") !== -1 ) {
+			//disable peoplepicker control when not in new form
 		$("input.sp-peoplepicker-editorInput[title='Accepting Officer']").prop('disabled', true);
 		//set disable css style
 		$("div.sp-peoplepicker-topLevel[title='Accepting Officer']").addClass("sp-peoplepicker-topLevelDisabled");
 		/**** END of making people picker read only**/
+		}
+		
 
 }
 function checkUserGroup(groupName) {
