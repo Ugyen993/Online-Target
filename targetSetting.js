@@ -59,7 +59,7 @@ $(document).ready(function(){
 	{
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
-		disablePeoplePicker(); // disbaling the poeple picker 
+		//disablePeoplePicker(); // disbaling the poeple picker 
 		
 		if(checkUserGroup("EAS Heads Group") === false) // Hide the accepting officer fields if not in  EAS head Group
 		{	
@@ -282,7 +282,7 @@ function getAcceptingOfficer(){
     var userList = peoplePicker.GetAllUserInfo();
 	var userInfo = userList[0];
 	var acceptingOfficer = userInfo.EntityData.AccountName.substring(userInfo.EntityData.AccountName.indexOf('\\')+1);
-	return acceptingOfficer;
+	//return acceptingOfficer;
 }
 
 function disablePeoplePicker()
