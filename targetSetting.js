@@ -60,48 +60,43 @@ $(document).ready(function(){
 		disablePeoplePicker(); // disbaling the poeple picker 
 		
 		if(checkUserGroup("EAS Heads Group") === false) // Hide the accepting officer fields if not in  EAS head Group
-		{
-			
+		{	
 		$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 		$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
 		$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
 		$("textarea[title='Accepting Officer Comment']").closest('tr').hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
-		
+			if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
+			{
+			hideFields();
+			GetListItems(apiPath, getSubordinateDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+			$('#sideNavBoxCustom').hide(); // Hide Top Menu
+			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
+			}
 		}
 		else if(checkUserGroup("EAS Heads Group") === false && sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 		{
 			hideFields();
 		}
-		else if(checkUserGroup("EAS Heads Group") !== fasle) // Hide the accepting officer fields if the user is in EAS head Group and if the target is assigned to this user
+		else if(checkUserGroup("EAS Heads Group") !== false) // Hide the accepting officer fields if the user is in EAS head Group and if the target is assigned to this user
 		{
 			$('#sideNavBoxCustom').hide(); // Hide Top Menu
-			if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+			if(sCurrentEmployee === (selectFieldValue.split(':')[1]))
 			{
 				$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 				$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
 				$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
 				$("textarea[title='Accepting Officer Comment']").closest('tr').hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
-			}	
-		}
-		if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
-		{
+			}
+			else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+			{
 			$('#sideNavBoxCustom').hide(); // Hide Top Menu
 			$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
 			$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
 			$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
 			$("textarea[title='Subordinate Comment']").closest('tr').hide();
+			}	
 		}
-		if(sCurrentEmployee === (selectFieldValue.split(':')[1]))
-		{
-			hideFields();
-		}
-		else if (sCurrentEmployee === (selectFieldValue.split(':')[1]))
-		{
-			GetListItems(apiPath, getSubordinateDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
-			$('#sideNavBoxCustom').hide(); // Hide Top Menu
-			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
-		}
-
+		
 	}
 	else if(window.location.href.indexOf("DispForm") !== -1 )//Run the code when in Dsip mode and disbale the subordiante and acepting officer fields based on user type 
 	{
