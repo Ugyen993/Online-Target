@@ -72,11 +72,16 @@ $(document).ready(function(){
 			$('#sideNavBoxCustom').hide(); // Hide Top Menu
 			$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
 			}
+			else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
+			{
+			$('#sideNavBoxCustom').hide(); // Hide Top Menu
+			$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
+			$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
+			$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
+			$("textarea[title='Subordinate Comment']").closest('tr').hide();
+			}
 		}
-		else if(checkUserGroup("EAS Heads Group") === false && sCurrentEmployee !== (selectFieldValue.split(':')[1]))
-		{
-			hideFields();
-		}
+	
 		else if(checkUserGroup("EAS Heads Group") !== false) // Hide the accepting officer fields if the user is in EAS head Group and if the target is assigned to this user
 		{
 			$('#sideNavBoxCustom').hide(); // Hide Top Menu
@@ -89,11 +94,11 @@ $(document).ready(function(){
 			}
 			else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]))
 			{
-			$('#sideNavBoxCustom').hide(); // Hide Top Menu
-			$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
-			$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
-			$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
-			$("textarea[title='Subordinate Comment']").closest('tr').hide();
+				$('#sideNavBoxCustom').hide(); // Hide Top Menu
+				$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
+				$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
+				$("select[title='Subordinate Status (Final Review)']").parent().parent().parent().hide(); 
+				$("textarea[title='Subordinate Comment']").closest('tr').hide();
 			}	
 		}
 		
@@ -291,7 +296,33 @@ function checkUserGroup(groupName) {
     })
     return result;
   }
-function checkUser(){
+// SharePoint specific "PreSaveAction" function  
+function PreSaveAction() { 
+
+
+	if($("select[title='Subordinate Status']").val() ===  "Target Rejected" && $("select[title='Subordinate Status (Mid Term Review)']").val() === undefined && $("select[title='Subordinate Status (Final Review)']").val() === undefined && $("textarea[title='Subordinate Comment']").val() === "") 
+	{
+		alert("Provide Comment 1");
+		return false;
+	}
+	if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === "Target Rejected" && $("select[title='Subordinate Status (Final Review)']").val() === undefined && $("textarea[title='Subordinate Comment']").val() === "") 
+	{
+		alert("Provide Comment 2");
+		return false;
+	}
+	if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === undefined && $("select[title='Subordinate Status (Final Review)']").val() === "Target Rejected" && $("textarea[title='Subordinate Comment']").val() === "") 
+	{
+		alert("Provide Comment 3");
+		return false;
+	}
+	return true;
+
+
+
+	// $("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
+	// $("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
+	// $("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
+	// $("textarea[title='Accepting Officer Comment']").closest('tr').hide(); 
 
 }
 
