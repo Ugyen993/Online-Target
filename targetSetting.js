@@ -259,6 +259,11 @@ function disablePeoplePicker()
 		$("input.sp-peoplepicker-editorInput[title='Assigned To']").prop('disabled', true);
 		//set disable css style
 		$("div.sp-peoplepicker-topLevel[title='Assigned To']").addClass("sp-peoplepicker-topLevelDisabled");
+		
+		//disable peoplepicker control
+		$("input.sp-peoplepicker-editorInput[title='Accepting Officer']").prop('disabled', true);
+		//set disable css style
+		$("div.sp-peoplepicker-topLevel[title='Accepting Officer']").addClass("sp-peoplepicker-topLevelDisabled");
 		/**** END of making people picker read only**/
 
 }
