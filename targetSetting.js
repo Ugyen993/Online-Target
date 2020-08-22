@@ -302,17 +302,17 @@ function PreSaveAction() {
 
 	if($("select[title='Subordinate Status']").val() ===  "Target Rejected" && $("select[title='Subordinate Status (Mid Term Review)']").val() === undefined && $("select[title='Subordinate Status (Final Review)']").val() === undefined && $("textarea[title='Subordinate Comment']").val() === "") 
 	{
-		alert("Provide Comment 1");
+		alert("Please provde necessary comment for the rejection of target");
 		return false;
 	}
 	if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === "Target Rejected" && $("select[title='Subordinate Status (Final Review)']").val() === undefined && $("textarea[title='Subordinate Comment']").val() === "") 
 	{
-		alert("Provide Comment 2");
+		alert("Please provde necessary comment for the rejection of target during the mid term review");
 		return false;
 	}
 	if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === undefined && $("select[title='Subordinate Status (Final Review)']").val() === "Target Rejected" && $("textarea[title='Subordinate Comment']").val() === "") 
 	{
-		alert("Provide Comment 3");
+		alert("Please provde necessary comment for the rejection of target during the final review");
 		return false;
 	}
 	return true;
