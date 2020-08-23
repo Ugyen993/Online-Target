@@ -2,6 +2,8 @@ var oEmployeesDetails = {};
 var oSubordinateDetails = {};
 var sGroup;
 var oResults={};
+var acceptingOfficer;
+
 
 $(document).ready(function(){
 
@@ -11,9 +13,29 @@ $(document).ready(function(){
 	//apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Master%20Data')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	
-	$("input[title='Targets Required Field']").on("input", function(){alert("changes")}) //Any chnages to the target field, save the initial data
-	
-	if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1 && window.location.href.indexOf("DispForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
+
+	if(window.location.href.indexOf("EditForm") !== -1 ) {
+		SP.SOD.executeFunc("sp.js","SP.ClientContext",function(){
+			setTimeout(function(){
+			getAcceptingOfficer();
+			checkForm();
+			},500);
+		 });
+	}
+	else
+	{
+		checkForm();
+	}
+
+	$("input[title='Targets Required Field']").on('change keydown paste input', function() {
+		var log = $("input[title='Targets Required Field']").val(); //Any chnages to the target field, save the initial data
+		//checkUserGroup();
+		logTargetHistory(log);
+	})
+
+	function checkForm()
+	{
+		if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1 && window.location.href.indexOf("DispForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
 	{
 		if (checkUserGroup("EAS Heads Group") == false)
 		{(function () {
@@ -59,7 +81,7 @@ $(document).ready(function(){
 	{
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
 		$("input[title*= 'Select Subordinate']").prop('disabled', true);
-		//disablePeoplePicker(); // disbaling the poeple picker 
+		disablePeoplePicker(); // disbaling the poeple picker 
 		
 		if(checkUserGroup("EAS Heads Group") === false) // Hide the accepting officer fields if not in  EAS head Group
 		{	
@@ -91,12 +113,15 @@ $(document).ready(function(){
 			if(sCurrentEmployee === (selectFieldValue.split(':')[1]))
 			{
 				hideFields();
+				GetListItems(apiPath, getSubordinateDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
+				$("input[id='Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").val(oSubordinateDetails.Designation);
+
 				$("select[title='Accepting Officer Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 				$("select[title='Accepting Officer Status (Final Review)']").parent().parent().parent().hide();
 				$("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
 				$("textarea[title='Accepting Officer Comment']").closest('tr').hide(); //Hide the accept and remark colmun if the user is not a accepting officer.    
 			}
-			else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]) && sCurrentEmployee === getAcceptingOfficer())
+			else if(sCurrentEmployee !== (selectFieldValue.split(':')[1]) && sCurrentEmployee === acceptingOfficer)
 			{
 				hideFields();
 				$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
@@ -125,6 +150,7 @@ $(document).ready(function(){
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
 		$(".ms-recommendations-panel").hide() // Hide the see also field
 	}
+	}
 	
 	});
 function hideFields(){
@@ -147,7 +173,6 @@ function hideFields(){
 	$("textarea[title='Special Achievement']").prop('disabled', true);
 	$("textarea[title='Impediment to performance']").prop('disabled', true);
 }
-
 function GetListItems(apiPath, success) {     
 	$.ajax({  
 		url: apiPath,  
@@ -202,11 +227,20 @@ function setFields(){
 	//Get the subordinte of the user
 	oEmployeesDetails.Supervisors = oEmployeesDetails.AsSupervisor? oEmployeesDetails.AsSupervisor.split(","): [];
 
+	if(oEmployeesDetails.Supervisors.length !== 0)
+	{
 	//Setting dropdown option -subordinates
 	setDropdown();
 	// hide textbox and show dropdown with possible values
 	$("input[title*= 'Select Subordinate']").hide().parent().append("<select id='selectPerson' onchange='setPerson(this)'></select>");
 	$("input[title*= 'Select Subordinate']").parent().find("br").remove();	
+	}
+	else
+	{
+		alert("Couldnt find your subordinates in the master data. Please contact Employee Performance Divison,CO");
+		window.location.href = "/HRAD/Target/Lists/Project%20Tasks/MyItems.aspx";
+	}
+	
 }
 function setDropdown(sLoadVal){
 	var $select = $("#selectPerson");
@@ -281,7 +315,7 @@ function getAcceptingOfficer(){
     //Get list of users from field (assuming 1 in this case)
     var userList = peoplePicker.GetAllUserInfo();
 	var userInfo = userList[0];
-	var acceptingOfficer = userInfo.EntityData.AccountName.substring(userInfo.EntityData.AccountName.indexOf('\\')+1);
+	acceptingOfficer = userInfo.EntityData.AccountName.substring(userInfo.EntityData.AccountName.indexOf('\\')+1);
 	//return acceptingOfficer;
 }
 
@@ -295,7 +329,7 @@ function disablePeoplePicker()
 		//set disable css style
 		$("div.sp-peoplepicker-topLevel[title='Assigned To']").addClass("sp-peoplepicker-topLevelDisabled");
 
-		if(window.location.href.indexOf("NewForm") !== -1 ) {
+		if(window.location.href.indexOf("NewForm") === -1 ) {
 			//disable peoplepicker control when not in new form
 		$("input.sp-peoplepicker-editorInput[title='Accepting Officer']").prop('disabled', true);
 		//set disable css style
@@ -329,23 +363,53 @@ function checkUserGroup(groupName) {
     })
     return result;
   }
+function logTargetHistory(newLog)
+{
+	
+	var oldLog = $("textarea[title='Target History Log']").val();
+	if(oldLog !== newLog)
+	{
+		oldLog +=newLog;
+		$("textarea[title='Target History Log']").val(oldLog);
+	}
+	
+	
+}
 // SharePoint specific "PreSaveAction" function  
 function PreSaveAction() { 
 
 
+	//Make comments necessary for subordinate, when rejected
 	if($("select[title='Subordinate Status']").val() ===  "Target Rejected" && $("select[title='Subordinate Status (Mid Term Review)']").val() === undefined && $("select[title='Subordinate Status (Final Review)']").val() === undefined && $("textarea[title='Subordinate Comment']").val() === "") 
 	{
-		alert("Please provde necessary comment for the rejection of target");
+		alert("Please provide necessary comment for the rejection of target");
 		return false;
 	}
-	if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === "Target Rejected" && $("select[title='Subordinate Status (Final Review)']").val() === undefined && $("textarea[title='Subordinate Comment']").val() === "") 
+	else if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === "Target Rejected" && $("select[title='Subordinate Status (Final Review)']").val() === undefined && $("textarea[title='Subordinate Comment']").val() === "") 
 	{
-		alert("Please provde necessary comment for the rejection of target during the mid term review");
+		alert("Please provide necessary comment for the rejection of target during the mid term review");
 		return false;
 	}
-	if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === undefined && $("select[title='Subordinate Status (Final Review)']").val() === "Target Rejected" && $("textarea[title='Subordinate Comment']").val() === "") 
+	else if($("select[title='Subordinate Status']").val() ===  undefined && $("select[title='Subordinate Status (Mid Term Review)']").val() === undefined && $("select[title='Subordinate Status (Final Review)']").val() === "Target Rejected" && $("textarea[title='Subordinate Comment']").val() === "") 
 	{
-		alert("Please provde necessary comment for the rejection of target during the final review");
+		alert("Please provide necessary comment for the rejection of target during the final review");
+		return false;
+	}
+
+	//Make comments necessary for accepting officer Accepting officer, when rejected
+	if($("select[title='Accepting Officer Status']").val() ===  "Target Rejected" && $("select[title='Accepting Officer Status (Mid Term Review)']").val() === undefined && $("select[title='Accepting Officer Status (Final Review)']").val() === undefined && $("textarea[title='Accepting Officer Comment']").val() === "") 
+	{
+		alert("Please provide necessary comment for the rejection of target : Accepting Officer");
+		return false;
+	}
+	else if($("select[title='Accepting Officer Status']").val() ===  undefined && $("select[title='Accepting Officer Status (Mid Term Review)']").val() === "Target Rejected" && $("select[title='Accepting Officer Status (Final Review)']").val() === undefined && $("textarea[title='Accepting Officer Comment']").val() === "") 
+	{
+		alert("Please provide necessary comment for the rejection of target during the mid term review : Accepting Officer");
+		return false;
+	}
+	else if($("select[title='Accepting Officer Status']").val() ===  undefined && $("select[title='Accepting Officer Status (Mid Term Review)']").val() === undefined && $("select[title='Accepting Officer Status (Final Review)']").val() === "Target Rejected" && $("textarea[title='Accepting Officer Comment']").val() === "") 
+	{
+		alert("Please provide necessary comment for the rejection of target during the final review : Accepting Officer");
 		return false;
 	}
 	return true;
