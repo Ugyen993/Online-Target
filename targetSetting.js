@@ -27,11 +27,11 @@ $(document).ready(function(){
 		checkForm();
 	}
 
-	$("input[title='Targets Required Field']").on('change keydown paste input', function() {
-		var log = $("input[title='Targets Required Field']").val(); //Any chnages to the target field, save the initial data
-		//checkUserGroup();
-		logTargetHistory(log);
-	})
+	// $("input[title='Targets Required Field']").on('change keydown paste input', function() {
+	// 	var log = $("input[title='Targets Required Field']").val(); //Any chnages to the target field, save the initial data
+	// 	//checkUserGroup();
+	// 	logTargetHistory(log);
+	// })
 
 	function checkForm()
 	{
@@ -377,6 +377,16 @@ function logTargetHistory(newLog)
 }
 // SharePoint specific "PreSaveAction" function  
 function PreSaveAction() { 
+
+	var oTempLog = $("textarea[title='Target History Log']").val() ;
+
+	if( $("input[title='Targets Required Field']").val() !==  oTempLog)
+	{
+		oTempLog += $("input[title='Targets Required Field']").val();
+		$("textarea[title='Target History Log']").val(oTempLog);
+	}
+
+
 
 
 	//Make comments necessary for subordinate, when rejected
