@@ -378,13 +378,13 @@ function logTargetHistory(newLog)
 // SharePoint specific "PreSaveAction" function  
 function PreSaveAction() { 
 
-	var oTempLog = $("textarea[title='Target History Log']").val() ;
+	// var oTempLog = $("textarea[title='Target History Log']").val() ;
 
-	if( $("input[title='Targets Required Field']").val() !==  oTempLog)
-	{
-		oTempLog += $("input[title='Targets Required Field']").val();
-		$("textarea[title='Target History Log']").val(oTempLog);
-	}
+	// if( $("input[title='Targets Required Field']").val() !==  oTempLog)
+	// {
+	// 	oTempLog += $("input[title='Targets Required Field']").val();
+	// 	$("textarea[title='Target History Log']").val(oTempLog);
+	// }
 
 
 
