@@ -3,6 +3,10 @@ var oSubordinateDetails = {};
 var sGroup;
 var oResults={};
 var acceptingOfficer;
+var oEmployeesMaster = [];
+var oTargetsArray = [];
+var tempEmpObjID ="";
+var oTempEIDPool=[]; 
 
 
 $(document).ready(function(){
@@ -12,7 +16,7 @@ $(document).ready(function(){
 	//var sCurrentEID = _spPageContextInfo.userLoginName.match(/\d+/g)[0];
 	//apiPath = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Master%20Data')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
 	apiPath = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + sCurrentEmployee + "'";
-	
+	apiPath2 = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Employee Target')/items?$top=2000";  
 
 	if(window.location.href.indexOf("EditForm") !== -1 ) {
 		SP.SOD.executeFunc("sp.js","SP.ClientContext",function(){
@@ -36,7 +40,7 @@ $(document).ready(function(){
 	function checkForm()
 	{
 		if(window.location.href.indexOf("MyItems") !== -1 && window.location.href.indexOf("NewForm") === -1 && window.location.href.indexOf("EditForm") === -1 && window.location.href.indexOf("DispForm") === -1)//Run the code when in Quick Edit mode and disbale the subordiante and acepting officer fields based on user type 
-	{
+		{
 		if (checkUserGroup("EAS Heads Group") == false)
 		{(function () {
 			var overrideContext = {};
@@ -59,9 +63,9 @@ $(document).ready(function(){
 			SPClientTemplates.TemplateManager.RegisterTemplateOverrides(overrideContext);
 		})();
 		}
-	}
+		}
 	else if(window.location.href.indexOf("NewForm") !== -1 ) //If the form  is New Form run the code 
-	{
+		{
 		$('#sideNavBoxCustom').hide(); // Hide Top Menu
 		$("select[title='Subordinate Status']").parent().parent().parent().hide(); //Hide the accept and remark colmun if the user is not the selected subordinate.    
 		$("select[title='Subordinate Status (Mid Term Review)']").parent().parent().parent().hide();
@@ -74,9 +78,10 @@ $(document).ready(function(){
 		$("textarea[title='Accepting Officer Comment']").closest('tr').hide();
 		$("input[id= 'Subordinate_x0027_s_x0020_Design_463df320-79ff-4bd9-a97b-d10d07e47581_$TextField']").prop('disabled', true); //Disable designation field 
 		
-		GetListItems(apiPath, getEmployeeDetails); //Usinf RESTful API to get the logged in user data from HRAD role matrix
-		
-	}
+		GetListItems(apiPath2, getEmployeesTarget);
+		GetListItems(apiPath, getEmployeeDetails); //Using RESTful API to get the logged in user data from HRAD role matrix
+		 //Using RESTfil API to get the overall target score for subordinates 
+		}
 	else if(window.location.href.indexOf("EditForm") !== -1 ) //If the form is Eidt  Form run the code 
 	{
 		var selectFieldValue = $("input[title*= 'Select Subordinate']")[0].value;
@@ -278,13 +283,12 @@ function setPerson(obj){
 		var selectedOption = drpOption.options[ drpOption.selectedIndex ].value;
 		var subordinateID = selectedOption.split(':')[1];
 		var subordinateEID = selectedOption.split('(')[0]
-
-
-		//Getting the selected subordinate details from Master Data by RESTful API
-		// apiPath2 = "http://disc:5000/HRAD/_api/lists/getbytitle('Role%20Matrix%20Master')/items?$select*&$filter= UserID eq '" + subordinateID + "'";
-		// GetListItems(apiPath2, getSubordinateDetails);
 		
-		// peoplePickerObject.AddUserKeys(subordinateID);
+		 //Provide the users a total information about the total score for the selected subordinate
+		$.alert({
+			title: 'Information',
+			content: 'Your Total Assigned Target Weightage for the selected subordinate is :'+ oTargetsArray[subordinateEID]["TargetTotal"],
+		});
 		var form = jQuery("table[class='ms-formtable']"); // get the form element 
     	var userField = form.find("input[id$='ClientPeoplePicker_EditorInput']").get(0); // find the people picker element, getting the first people pickers on the form 
     	var peoplepicker = SPClientPeoplePicker.PickerObjectFromSubElement(userField); // Use SPClientPeoplePicker to get the actual picker object
@@ -431,6 +435,61 @@ function PreSaveAction() {
 	// $("select[title='Accepting Officer Status (Mid Term Review)']").parent().parent().parent().hide(); 
 	// $("textarea[title='Accepting Officer Comment']").closest('tr').hide(); 
 
+}
+
+function getEmployeesTarget(data){
+    var items; // Data will have user object  
+    var oTotalScore;
+		
+	if (data != null) {  
+		items = data.d;  
+		if (items != null) {  
+            oEmployeesMaster = items.results;  
+
+            for (var i = 0; i < oEmployeesMaster.length; i++)
+            {
+              
+               oTotalScore = oEmployeesMaster[i].Target_x0020_Weightage;
+              
+
+                if(!checkEID(oTempEIDPool,oEmployeesMaster[i].Subordinate_x0027_s_x0020_EID))
+                {
+                    oTargetsArray[oEmployeesMaster[i].Subordinate_x0027_s_x0020_EID] = {
+                        
+                        "TargetTotal":oEmployeesMaster[i].Target_x0020_Weightage,
+                        "status": "1",
+                    };
+
+                }
+              
+                setTargetsArray(oEmployeesMaster[i], oTotalScore);
+
+                tempEmpObjID = oEmployeesMaster[i].Subordinate_x0027_s_x0020_EID;
+                oTempEIDPool.push(tempEmpObjID);
+
+            }
+     
+		}
+	}
+}
+function checkEID(arr, el) {
+    let found = false;
+    arr.forEach((element) => {
+      console.log(element)
+      if (element === el) {
+        found = true;
+      }
+    });
+    return found;
+  }
+function setTargetsArray(currentEmpObj, oTotalScore)
+{   
+    if(checkEID(oTempEIDPool,currentEmpObj.Subordinate_x0027_s_x0020_EID))
+    {
+        
+        oTargetsArray[currentEmpObj.Subordinate_x0027_s_x0020_EID]["TargetTotal"] += oTotalScore;
+       
+    }
 }
 
 
